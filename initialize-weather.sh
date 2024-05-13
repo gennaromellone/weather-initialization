@@ -11,7 +11,6 @@ if [ -z "$ANYPWD" ]; then
 fi
 
 echo -e "\e[91m---- INSTALLING PREREQUISITES ----\e[0m"
-
 sudo apt update
 sudo apt upgrade -y
 sudo apt-get install -y openssh-server make curl
@@ -24,11 +23,11 @@ sudo apt update
 sudo apt install anydesk -y
 echo -e "\e[91mSetting password ...\e[0m"
 echo $ANYPWD | sudo anydesk --set-password
-sudo cp util/custom.conf /etc/gdm3/custom.conf
+sudo cp $HOME/weather-initialization/util/custom.conf /etc/gdm3/custom.conf
 
 echo -e "\e[91mSetting dummy display ...\e[0m"
 sudo apt-get install xserver-xorg-video-dummy
-sudo cp util/xorg.conf /etc/X11/xorg.conf
+sudo cp $HOME/weather-initialization/util/xorg.conf /etc/X11/xorg.conf
 
 
 echo -e "\e[91m---- INSTALLING DOCKER ----\e[0m"
@@ -44,16 +43,17 @@ sudo apt-get install docker-compose -y
 
 echo -e "\e[91m---- INSTALLING SER2NET ----\e[0m"
 sudo apt-get install ser2net -y
-sudo cp util/ser2net.yaml /etc/ser2net.yaml
+sudo cp $HOME/weather-initialization/util/ser2net.yaml /etc/ser2net.yaml
 echo -e "\e[91mActivating ser2net ...\e[0m"
 sudo systemctl restart ser2net.service 
 
 
 echo -e "\e[91m---- INSTALLING VANTAGE-PUBLISHER ----\e[0m"
+cd $HOME
 git clone https://github.com/gennaromellone/vantage-publisher
 cd vantage-publisher
 sudo chmod +x vantage-updater.sh
-sudo cp ../util/vantage-updater.service /etc/systemd/
+sudo cp $HOME/weather-initialization/util/vantage-updater.service /etc/systemd/
 sudo systemctl enable vantage-updater.service
 make build
 docker-compose up -d
