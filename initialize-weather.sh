@@ -60,6 +60,7 @@ docker-compose up -d
 
 
 echo -e "\e[91m---- DONE! ----\e[0m"
+sudo anydesk --get-id
 echo -e "\e[91mPlease reboot the system. (y/n)\e[0m"
 read rb
 
