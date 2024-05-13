@@ -65,6 +65,9 @@ sudo systemctl enable $HOME/weather-initialization/util/vantage-updater.service
 make build
 docker-compose up -d
 
+echo -e "\e[91m---- SETTING CRONTAB  ----\e[0m"
+# Weekly reboot
+(crontab -l ; echo "0 0 * * 0 /sbin/reboot") | crontab -
 
 echo -e "\e[91m---- DONE! ----\e[0m"
 sudo anydesk --get-id
