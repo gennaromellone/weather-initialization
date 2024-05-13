@@ -10,6 +10,13 @@ if [ -z "$ANYPWD" ]; then
     exit 1
 fi
 
+echo -e "\e[91m---- SETTING HOTSPOT ----\e[0m"
+
+nmcli device wifi hotspot con-name Weather ssid weather-parthenope band bg channel 11 password $ANYPWD
+nmcli connection modify Weather connection.autoconnect yes
+nmcli connection modify Weather 802-11-wireless-security.pmf 1
+nmcli con up Weather
+
 echo -e "\e[91m---- INSTALLING PREREQUISITES ----\e[0m"
 sudo apt update
 sudo apt upgrade -y
