@@ -64,7 +64,7 @@ sudo chmod +x vantage-updater.sh
 sudo cp $HOME/weather-initialization/util/vantage-updater.service /etc/systemd/
 sudo systemctl enable $HOME/weather-initialization/util/vantage-updater.service
 make build
-docker-compose up -d
+docker compose up -d
 
 echo -e "\e[91m---- SETTING CRONTAB  ----\e[0m"
 # Weekly reboot
