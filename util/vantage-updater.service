@@ -2,7 +2,7 @@
 Description=Update repository vantage-publisher
 
 [Service]
-ExecStart=$HOME/vantage-publisher/vantage-updater.sh
+ExecStart=/home/weather/vantage-publisher/vantage-updater.sh
 
 [Install]
 WantedBy=multi-user.target
