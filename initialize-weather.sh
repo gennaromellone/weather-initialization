@@ -51,6 +51,7 @@ sudo apt-get install docker-compose -y
 echo -e "\e[91m---- INSTALLING SER2NET ----\e[0m"
 sudo apt-get install ser2net -y
 sudo cp $HOME/weather-initialization/util/ser2net.yaml /etc/ser2net.yaml
+sudo cp $HOME/weather-initialization/util/ser2net.service /lib/systemd/system/ser2net.service
 echo -e "\e[91mActivating ser2net ...\e[0m"
 sudo systemctl restart ser2net.service 
 
