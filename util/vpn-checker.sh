@@ -8,8 +8,6 @@ do
 		echo "Disconnected, trying to reconnect…"
 		sleep 1s
   		nmcli con up id $HOSTNAME
-  		echo "Restarting AnyDesk"
-  		sudo systemctl restart anydesk
 	else
 		echo "Already connected !"
 	fi
