@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ISCONNECTED=1
-PREV_STATE=""
+PREV_STATE="INIT"
 
 while true; do
     sleep 30
@@ -26,16 +26,26 @@ while true; do
         elif [[ $VPNCON == "activating" ]]; then
             echo "Not connected! Connecting to VPN"
             CURRENT_STATE="CONNECTING"
+            nmcli con up id $HOSTNAME
         else
             echo "VPN down, but LAN is connected"
             CURRENT_STATE="LAN"
         fi
     fi
 
-    # Verifica se lo stato della connessione è cambiato
-    if [[ "$PREV_STATE" != "$CURRENT_STATE" ]]; then
+    # Verifica se lo stato della connessione è cambiato, escluso il primo ciclo
+    if [[ "$PREV_STATE" != "INIT" && "$PREV_STATE" != "$CURRENT_STATE" ]]; then
         if [[ "$CURRENT_STATE" == "LAN" || "$CURRENT_STATE" == "DISCONNECTED" ]]; then
             ISCONNECTED=0
+        elif [[ "$CURRENT_STATE" == "VPN" ]]; then
+            ISCONNECTED=1
+            if [[ "$PREV_STATE" == "LAN" ]]; then
+                # Attiva la connessione VPN solo se non è già attiva
+                if [[ $VPNCON != "activated" ]]; then
+                    echo "Activating VPN..."
+                    nmcli con up id $HOSTNAME
+                fi
+            fi
         fi
     fi
 
