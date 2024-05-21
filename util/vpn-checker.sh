@@ -2,7 +2,7 @@
 
 while [ “true” ]
 do
-	sleep 30
+	#sleep 30
 	VPNCON=$(nmcli -f GENERAL.STATE con show id $HOSTNAME | awk '{print $2}')
 
 
@@ -13,6 +13,17 @@ do
    		echo "Not connected! Connecting to VPN"
      	else
       		echo "VPN down"
+		PINGCON=$(ping 8.8.8.8 -c2 -q -W 3|grep "2 received")
+		if [[ $PINGCON != *2*received* ]];then
+			echo "Disconnected, trying to reconnect…"
+			nmcli con down id $HOSTNAME
+			sleep 1s 
+			nmcli con up id $HOSTNAME
+	  		#echo "Restarting AnyDesk"
+	  		#sudo systemctl restart anydesk
+		else
+			echo "Connected to LAN!"
+		fi
 	fi
 
 
