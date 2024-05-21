@@ -9,8 +9,7 @@ do
 		sleep 1s
   		nmcli con up id $HOSTNAME
   		echo "Restarting AnyDesk"
-  		sudo killall anydesk
-    		sudo anydesk --service
+  		sudo systemctl restart anydesk
 	else
 		echo "Already connected !"
 	fi
@@ -23,8 +22,7 @@ do
 		sleep 1s 
 		nmcli con up id $HOSTNAME
   		echo "Restarting AnyDesk"
-  		sudo killall anydesk 
-    		sudo anydesk --service
+  		sudo systemctl restart anydesk
 	else
 		echo "Connected!"
 	fi
