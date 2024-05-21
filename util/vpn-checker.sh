@@ -33,7 +33,7 @@ while true; do
 
     # Verifica se lo stato della connessione è cambiato
     if [[ "$PREV_STATE" != "$CURRENT_STATE" ]]; then
-        if [[ "$CURRENT_STATE" == "LAN" || "$CURRENT_STATE" == "DISCONNECTED" ]]; then
+        if [[  "$CURRENT_STATE" == "VPN" || "$CURRENT_STATE" == "LAN" || "$CURRENT_STATE" == "DISCONNECTED" ]]; then
             ISCONNECTED=0
         fi
     fi
