@@ -55,6 +55,11 @@ sudo cp $HOME/weather-initialization/util/ser2net.service /lib/systemd/system/se
 echo -e "\e[91mActivating ser2net ...\e[0m"
 sudo systemctl restart ser2net.service 
 
+echo -e "\e[91m---- INSTALLING CONNECTION CHECKER DAEMON ----\e[0m"
+sudo chmod +x $HOME/weather-initialization/util/vpn-checker.sh
+sudo cp $HOME/weather-initialization/util/connection-status.service /etc/systemd/
+sudo systemctl enable $HOME/weather-initialization/util/connection-status.service
+sudo systemctl start $HOME/weather-initialization/util/connection-status.service
 
 echo -e "\e[91m---- INSTALLING VANTAGE-PUBLISHER ----\e[0m"
 cd $HOME
