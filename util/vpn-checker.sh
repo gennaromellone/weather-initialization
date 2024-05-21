@@ -2,6 +2,7 @@
 
 while [ “true” ]
 do
+	sleep 30
 	VPNCON=$(nmcli -f GENERAL.STATE con show id $HOSTNAME | awk '{print $2}')
 	if [[ $VPNCON != "activated" ]]; then
 		echo "Disconnected, trying to reconnect…"
@@ -24,5 +25,5 @@ do
 	else
 		echo "Connected!"
 	fi
-	sleep 60
+	sleep 30
 done
