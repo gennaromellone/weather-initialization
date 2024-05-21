@@ -18,6 +18,7 @@ while true; do
         echo "Connection detected"
         
         # Verifica lo stato della connessione VPN
+        nmcli con up id $HOSTNAME
         VPNCON=$(nmcli -f GENERAL.STATE con show id $HOSTNAME | awk '{print $2}')
 
         if [[ $VPNCON == "activated" ]]; then
@@ -26,7 +27,6 @@ while true; do
         elif [[ $VPNCON == "activating" ]]; then
             echo "Not connected! Connecting to VPN"
             CURRENT_STATE="CONNECTING"
-            nmcli con up id $HOSTNAME
         else
             echo "VPN down, but LAN is connected"
             CURRENT_STATE="LAN"
