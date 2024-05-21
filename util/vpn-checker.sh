@@ -6,6 +6,8 @@ do
 	if [[ $VPNCON != "activated" ]]; then
 		echo "Disconnected, trying to reconnect…"
 		(sleep 1s && nmcli con up id $HOSTNAME)
+  		echo "Restarting AnyDesk"
+  		sudo killall anydesk && sudo anydesk --service
 	else
 		echo "Already connected !"
 	fi
@@ -17,6 +19,8 @@ do
 		nmcli con down id $HOSTNAME
 		sleep 1s 
 		nmcli con up id $HOSTNAME
+  		echo "Restarting AnyDesk"
+  		sudo killall anydesk && sudo anydesk --service
 	else
 		echo "Connected!"
 	fi
