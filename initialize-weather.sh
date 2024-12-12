@@ -20,7 +20,7 @@ nmcli con up Weather
 echo -e "\e[91m---- INSTALLING PREREQUISITES ----\e[0m"
 sudo apt update
 sudo apt upgrade -y
-sudo apt-get install -y openssh-server make curl
+sudo apt-get install -y openssh-server make curl python3-pip
 
 
 echo -e "\e[91m---- INSTALLING ANYDESK ----\e[0m"
@@ -42,10 +42,12 @@ curl -fsSL https://get.docker.com -o get-docker.sh
 sudo sh get-docker.sh
 sudo groupadd docker
 sudo usermod -aG docker $USER
-
+sudo chmod 666 /var/run/docker.sock
 sudo systemctl enable docker.service
 sudo systemctl enable containerd.service
 sudo apt-get install docker-compose -y
+sudo chown "$USER":"$USER" /home/"$USER"/.docker -R
+sudo chmod g+rwx "$HOME/.docker" -R
 
 
 echo -e "\e[91m---- INSTALLING SER2NET ----\e[0m"
@@ -61,19 +63,40 @@ sudo cp $HOME/weather-initialization/util/connection-status.service /etc/systemd
 sudo systemctl enable $HOME/weather-initialization/util/connection-status.service
 #sudo systemctl start $HOME/weather-initialization/util/connection-status.service
 
+echo -e "\e[91m---- CREATING STORAGE AND SETTING PERMISSIONS ----\e[0m"
+sudo mkdir -p /storage
+sudo groupadd vantagepro
+sudo chown -R :vantagepro /storage
+sudo usermod -aG vantagepro ${USER}
+sudo chmod -R 777 /storage
+sudo chmod g+s /storage
+
+echo -e "\e[91m---- INSTALLING PyVantagePro AND SETTING VANTAGEPRO DATE ----\e[0m"
+sudo -u "$USER" bash -c "
+    pip install --upgrade pip
+    pip install git+https://github.com/gennaromellone/PyVantagePro.git
+    current_time=\$(date '+%Y-%m-%d %H:%M:%S')
+    pyvantagepro settime tcp:127.0.0.1:22222 \"\$current_time\"
+"
+
 echo -e "\e[91m---- INSTALLING VANTAGE-PUBLISHER ----\e[0m"
-cd $HOME
-git clone https://github.com/gennaromellone/vantage-publisher
-cd vantage-publisher
-sudo chmod +x vantage-updater.sh
+sudo -u "$USER" bash -c "
+    cd $HOME
+    git clone https://github.com/gennaromellone/vantage-publisher
+    cd vantage-publisher
+    chmod +x vantage-updater.sh
+    make build
+    docker compose up -d
+"
 sudo cp $HOME/weather-initialization/util/vantage-updater.service /etc/systemd/
 sudo systemctl enable $HOME/weather-initialization/util/vantage-updater.service
-make build
-docker compose up -d
 
-echo -e "\e[91m---- SETTING CRONTAB  ----\e[0m"
-# Weekly reboot
-(crontab -l ; echo "0 0 * * 0 /sbin/reboot") | crontab -
+echo -e "\e[91m---- SETTING CRONTAB ----\e[0m"
+{
+    crontab -l 2>/dev/null
+    echo "0 0 * * 0 /sbin/reboot"
+} | crontab -
+echo -e "\e[91mCrontab updated successfully!\e[0m"
 
 echo -e "\e[91m---- DONE! ----\e[0m"
 sudo anydesk --get-id
