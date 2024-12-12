@@ -97,7 +97,7 @@ echo -e "\e[91m---- SETTING CRONTAB ----\e[0m"
 {
     crontab -l 2>/dev/null
     echo "0 0 * * 0 /sbin/reboot"
-    echo "0 * * * * $HOME/weather-initialization/util/eeprom.sh >> /storage/log/eeprom.log 2>&1"
+    echo "0 * * * * ${HOME}/weather-initialization/util/eeprom.sh >> /storage/log/eeprom.log 2>&1"
 } | crontab -
 echo -e "\e[91mCrontab updated successfully!\e[0m"
 
